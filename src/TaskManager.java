@@ -1,120 +1,197 @@
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 public class TaskManager {
 	private int counter = 0; // Для генерации идентификаторов можно использовать числовое поле-счётчик
 	
 	// Возможность хранить задачи всех типов. Для этого вам нужно выбрать подходящую коллекцию.
-	private HashMap<Integer, Task> tasks;
-	private HashMap<Integer, Epic> epics;
-	private HashMap<Integer, Subtask> subtasks;
+	private HashMap<Integer, Task> tasks;       // Список Задач
+	private HashMap<Integer, Epic> epics;       // Список Эпиков
+	private HashMap<Integer, Subtask> subtasks; // Список Подзадач
 	
-	// Для генерации идентификаторов использовать counter увеличивая его на 1, когда нужно получить новое значение.
-	private int getCounter() {
-		return ++counter;
+	TaskManager() {
+		this.tasks = new HashMap<>();
+		this.epics = new HashMap<>();
+		this.subtasks = new HashMap<>();
 	}
 	
-	// Получение списка всех задач.
+	// Получить новый уникальный id
+	public int getCounter() {
+		return ++this.counter;
+	}
+	
+	// Получить список всех Задач
 	public HashMap<Integer, Task> getListAllTasks() {
-		return null;
+		return this.tasks;
 	}
 	
-	// Получение списка всех эпиков.
+	// Получить список всех Эпиков
 	public HashMap<Integer, Epic> getListAllEpics() {
-		return null;
+		return this.epics;
 	}
 	
-	// Получение списка всех подзадач.
+	// Получить список всех Подзадач
 	public HashMap<Integer, Subtask> getListAllSubtasks() {
-		return null;
+		return this.subtasks;
 	}
 	
-	// Удаление всех задач.
+	// Удалить все Задачи
 	public void delAllTasks() {
-	
+		this.tasks.clear();
 	}
 	
-	// Удаление всех эпиков.
+	// Удалить все Эпики
 	public void delAllEpics() {
-	
+		// Удалить все Подзадачи у Эпиков
+		for (Map.Entry<Integer, Epic> entry : this.epics.entrySet()) {
+			this.delAllSubtasks(entry.getValue());
+		}
+		
+		// Удалить все Эпики
+		this.epics.clear();
 	}
 	
-	// Удаление всех подзадач.
-	public void delAllSubtasks() {
-	
+	// Удалить все Подзадачи
+	public void delAllSubtasks(Epic epic) {
+		// Получить список Подзадач Эпика
+		HashMap<Integer, Subtask> subtasksToDel = epic.getAllSubtasks();
+		
+		// Удалить Подзадачи из общего списка
+		for(Integer id : subtasksToDel.keySet()) {
+			this.subtasks.remove(id);
+		}
+		
+		// Удалить все Подзадачи
+		epic.delAllSubtask();
 	}
 	
-	// Получение по идентификатору.
+	// Получить Задачу по id
 	public Task getTaskById(int id) {
-		return null;
+		return this.tasks.get(id);
 	}
 	
-	// Получение по идентификатору.
+	// Получить Эпик по id
 	public Epic getEpicById(int id) {
-		return null;
+		return this.epics.get(id);
 	}
 	
-	// Получение по идентификатору.
+	// Получить Подзадачу по id
 	public Subtask getSubtaskById(int id) {
-		return null;
+		return this.subtasks.get(id);
 	}
 	
-	// Создание. Сам объект должен передаваться в качестве параметра.
+	// Получить все Задачи
+	public HashMap<Integer, Task> getAllTasks() {
+		return this.tasks;
+	}
+	
+	// Получить все Эпики
+	public HashMap<Integer, Epic> getAllEpics() {
+		return this.epics;
+	}
+	
+	// Получить все Подзадачи
+	public HashMap<Integer, Subtask> getAllSubtasks() {
+		return this.subtasks;
+	}
+	
+	// Добавить Задачу
 	public void put(Task task) {
-	
+		// Если объект пустой или неверного типа
+		if (task == null) return;
+		if (task.getTypeTask() != TypeTask.TASK) return;
+		
+		// Добавить Задачу в список
+		this.tasks.put(task.getId(), task);
 	}
 	
-	// Создание. Сам объект должен передаваться в качестве параметра.
+	// Создать Эпик
 	public void put(Epic epic) {
-	
+		// Если объект пустой или неверного типа
+		if (epic == null) return;
+		if (epic.getTypeTask() != TypeTask.EPIC) return;
+		
+		// Добавить Эпик в список
+		this.epics.put(epic.getId(), epic);
+		
+		// Получить все подзадачи Эпика
+		HashMap<Integer, Subtask> subtasks = epic.getAllSubtasks();
+		
+		// Добавить все подзадачи Эпика в общий список
+		this.subtasks.putAll(subtasks);
 	}
 	
-	// Создание. Сам объект должен передаваться в качестве параметра.
+	// Создать Подзадачу
 	public void put(Subtask subtask) {
-	
+		// Если объект пустой или неверного типа
+		if (subtask == null) return;
+		if (subtask.getTypeTask() != TypeTask.SUBTASK) return;
+		
+		// Добавить Подзадачу в список
+		this.subtasks.put(subtask.getId(), subtask);
 	}
 	
-	// Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра.
+	// Обновить Задачу
 	public void update(Task task) {
-	
+		this.tasks.put(task.getId(), task);
 	}
 	
-	// Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра.
+	// Обновить Эпик
 	public void update(Epic epic) {
-	
+		this.epics.put(epic.getId(), epic);
 	}
 	
-	// Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра.
+	// Обновить Подзадачу
 	public void update(Subtask subtask) {
-	
+		this.subtasks.put(subtask.getId(), subtask);
 	}
 	
-	// Удаление по идентификатору.
+	// Удалить Задачу по id
 	public void delTask(int id) {
-	
+		this.tasks.remove(id);
 	}
 	
-	// Удаление по идентификатору.
+	// Удалить Эпик по id
 	public void delEpic(int id) {
-	
+		// Получить Эпик из общего списка по id
+		Epic epic = this.epics.get(id);
+		
+		// Получить все подзадачи Эпика
+		HashMap<Integer, Subtask> subtasks = epic.getAllSubtasks();
+		
+		// Удалить у Эпика все Подзадачи
+		this.delAllSubtasks(epic);
+		
+		// Удалить Эпик
+		this.epics.remove(id);
 	}
 	
-	// Удаление по идентификатору.
+	// Удалить Подзадачу по id
 	public void delSubtask(int id) {
-	
+		// Получить Подзадачу по id
+		Subtask subtask = this.subtasks.get(id);
+		
+		// Из Подзадачи получить Эпик
+		Epic epic = subtask.getEpic();
+		
+		// Из Эпика удалить Подзадачу
+		epic.delSubtask(id);
+		
+		// Удалить Подзадачу из списка Подзадач
+		this.subtasks.remove(id);
 	}
 	
-	// Получение списка всех подзадач определённого эпика.
+	// Получить список всех Подзадач определённого Эпика
 	public HashMap<Integer, Subtask> getAllSubtasksByEpic(Epic epic) {
+		return epic.getAllSubtasks();
+	}
+	
+	// Получить списка всех Подзадач определённого Эпика по id
+	public HashMap<Integer, Subtask> getAllSubtasksByEpic(int idEpic) {
+		Epic epic = this.epics.get(idEpic);
+		if (epic != null) return epic.getAllSubtasks();
 		return null;
 	}
-	
-	/*Управление статусами осуществляется по следующему правилу:
-	a. Менеджер сам не выбирает статус для задачи.
-	Информация о нём приходит менеджеру вместе с информацией о самой задаче.
-	По этим данным в одних случаях он будет сохранять статус, в других будет рассчитывать.
-	
-	b. Для эпиков:
-		если у эпика нет подзадач или все они имеют статус NEW, то статус должен быть NEW.
-		если все подзадачи имеют статус DONE, то и эпик считается завершённым — со статусом DONE.
-		во всех остальных случаях статус должен быть IN_PROGRESS.*/
 }
