@@ -1,3 +1,6 @@
+package model;
+
+import enumerations.*;
 import java.util.Objects;
 
 public class Task {
@@ -7,7 +10,7 @@ public class Task {
     private final int id;       // Уникальный идентификационный номер задачи, по которому её можно будет найти.
     private Status status;      // Статус, отображающий её прогресс. Вы будете выделять следующие этапы жизни задачи, используя enum.
     
-    Task(int id) {
+    public Task(int id) {
         this.typeTask = TypeTask.TASK;
         this.id = id;
         this.name = "";
@@ -15,7 +18,7 @@ public class Task {
         this.status = Status.NEW;
     }
     
-    Task(int id, String name, String description, Status status) {
+    public Task(int id, String name, String description, Status status) {
         this.typeTask = TypeTask.TASK;
         this.id = id;
         this.name = name;
@@ -23,7 +26,7 @@ public class Task {
         this.status = status;
     }
     
-    Task(Task task) {
+    public Task(Task task) {
         this.typeTask = TypeTask.TASK;
         this.id = task.id;
         this.name = task.name;

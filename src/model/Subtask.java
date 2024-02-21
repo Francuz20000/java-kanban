@@ -1,20 +1,22 @@
-import java.util.HashMap;
+package model;
+
+import enumerations.*;
 
 public class Subtask extends Task {
 	// Для каждой подзадачи известно, в рамках какого эпика она выполняется.
 	private Epic epic;
 	
-	Subtask(int id) {
+	public Subtask(int id) {
 		super(id);
 		super.typeTask = TypeTask.SUBTASK;
 	}
 	
-	Subtask(int id, String name, String description, Status status) {
+	public Subtask(int id, String name, String description, Status status) {
 		super(id, name, description, status);
 		super.typeTask = TypeTask.SUBTASK;
 	}
 	
-	Subtask(Subtask subtask) {
+	public Subtask(Subtask subtask) {
 		super(subtask);
 		super.typeTask = TypeTask.SUBTASK;
 	}

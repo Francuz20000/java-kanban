@@ -1,3 +1,5 @@
+package enumerations;
+
 public enum TypeTask {
 	TASK,   // Задача
 	EPIC,   // Эпик

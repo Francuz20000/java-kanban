@@ -1,7 +1,12 @@
+package service;
+
+import enumerations.*;
+import model.Epic;
+import model.Subtask;
+import model.Task;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 public class TaskManager {
 	private int counter = 0; // Для генерации идентификаторов можно использовать числовое поле-счётчик
@@ -11,7 +16,7 @@ public class TaskManager {
 	private HashMap<Integer, Epic> epics;       // Список Эпиков
 	private HashMap<Integer, Subtask> subtasks; // Список Подзадач
 	
-	TaskManager() {
+	public TaskManager() {
 		this.tasks = new HashMap<>();
 		this.epics = new HashMap<>();
 		this.subtasks = new HashMap<>();

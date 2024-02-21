@@ -1,3 +1,6 @@
+package model;
+
+import enumerations.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -5,20 +8,20 @@ public class Epic extends Task {
 	// Каждый эпик знает, какие подзадачи в него входят
 	private HashMap<Integer, Subtask> subtasks;
 	
-	Epic(int id) {
+	public Epic(int id) {
 		super(id);
 		super.typeTask = TypeTask.EPIC;
 		this.subtasks = new HashMap<>();
 	}
 	
-	Epic(int id, String name, String description, Status status) {
+	public Epic(int id, String name, String description, Status status) {
 		super(id, name, description, status);
 		super.typeTask = TypeTask.EPIC;
 		this.subtasks = new HashMap<>();
 		
 	}
 	
-	Epic(Epic epic) {
+	public Epic(Epic epic) {
 		super(epic);
 		super.typeTask = TypeTask.EPIC;
 		this.subtasks = new HashMap<>();
