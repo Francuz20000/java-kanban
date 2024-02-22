@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Поехали!");
         
-        // Объект-менеджер который управляет всеми задачами
+        // Создать Объект-менеджер который управляет всеми задачами
         TaskManager taskManager = new TaskManager();
         
         // Создать Задачи, Эпики и Подзадачи
@@ -42,6 +42,8 @@ public class Main {
         // Создать две Задачи
         Task task1 = new Task(taskManager.getCounter(), "Задача 1", "Попытка создать Задача 1", Status.NEW);
         Task task2 = new Task(taskManager.getCounter(), "Задача 2", "Попытка создать Задача 2", Status.NEW);
+        
+        // Добавить Задачи в Менеджер Задач
         taskManager.put(task1);
         taskManager.put(task2);
         
@@ -50,22 +52,22 @@ public class Main {
         Subtask subtask1 = new Subtask(taskManager.getCounter(), "Подзадача 1", "Попытка создать Подзадача 1", Status.NEW);
         Subtask subtask2 = new Subtask(taskManager.getCounter(), "Подзадача 2", "Попытка создать Подзадача 2", Status.NEW);
         
-        // Положить Подзадачи в Эпик
-        epic1.putSubtask(subtask1);
-        epic1.putSubtask(subtask2);
-        
         // Положить Эпик в Менеджер Задач
         taskManager.put(epic1);
+        
+        // Добавить Подзадачи в Менеджер Задач
+        taskManager.put(epic1.getId(), subtask1);
+        taskManager.put(epic1.getId(), subtask2);
         
         // Создать Эпик с одной Подзадачей.
         Epic epic2 = new Epic(taskManager.getCounter(), "Эпик 2", "Попытка создать Эпик 2", Status.NEW);
         Subtask subtask3 = new Subtask(taskManager.getCounter(), "Подзадача 3", "Попытка создать Подзадача 3", Status.NEW);
         
-        // Положить Подзадачу в Эпик
-        epic2.putSubtask(subtask3);
-        
-        // Положить Эпик в Менеджер Задач
+        // Добавить Эпик в Менеджер Задач
         taskManager.put(epic2);
+        
+        // Добавить Подзадачу в Менеджер Задач
+        taskManager.put(epic2.getId(), subtask3);
     }
     
     // Распечатать списки эпиков, задач и подзадач

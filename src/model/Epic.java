@@ -3,34 +3,51 @@ package model;
 import enumerations.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
 
 public class Epic extends Task {
-	// Каждый эпик знает, какие подзадачи в него входят
-	private HashMap<Integer, Subtask> subtasks;
+	// Каждый эпик знает, id каких подзадач в него входят
+	//private HashMap<Integer, Subtask> subtasks;
+	private ArrayList<Integer> subtasksId;
 	
 	public Epic(int id) {
 		super(id);
 		super.typeTask = TypeTask.EPIC;
-		this.subtasks = new HashMap<>();
+		//this.subtasks = new HashMap<>();
+		this.subtasksId = new ArrayList<>();
 	}
 	
 	public Epic(int id, String name, String description, Status status) {
 		super(id, name, description, status);
 		super.typeTask = TypeTask.EPIC;
-		this.subtasks = new HashMap<>();
-		
+		//this.subtasks = new HashMap<>();
+		this.subtasksId = new ArrayList<>();
 	}
 	
+	// Конструктор копирования
 	public Epic(Epic epic) {
+		// Заполнить поля базового класса
 		super(epic);
+		
+		// Задать другой тип задачи
 		super.typeTask = TypeTask.EPIC;
-		this.subtasks = new HashMap<>();
+		
+		// Инициализировать список
+		this.subtasksId = new ArrayList<>();
+		
+		// Получить список копий id всех Подзадач
+		ArrayList<Integer> addSubtasksId = epic.getAllSubtasksId();
+		
+		// Добавить копии id Подзадач в список
+		this.subtasksId.addAll(addSubtasksId);
 	}
 	
+	/*----------- Перенести в TaskManager */
 	// Расчитать текущий статус
 	public Status getStatus() {
 		// Если Подзадач нету то Эпик всегда NEW
-		if (this.subtasks.isEmpty()) return Status.NEW;
+		//if (this.subtasks.isEmpty()) return Status.NEW;
+		if (this.subtasksId.isEmpty()) return Status.NEW;
 		
 		// Если все Подзадачи NEW то Эпик тоже NEW
 		boolean isNew = true;
@@ -55,7 +72,7 @@ public class Epic extends Task {
 		// Иначе IN_PROGRESS
 		return Status.IN_PROGRESS;
 	}
-	
+	/*
 	// Получить Подзадачу по id
 	public Subtask getSubtask(int id) {
 		if (this.subtasks.containsKey(id)) {
@@ -63,29 +80,31 @@ public class Epic extends Task {
 		}
 		
 		return null;
-	}
+	}*/
 	
-	// Получить список всех Подзадач
-	public HashMap<Integer, Subtask> getAllSubtasks() {
-		return this.subtasks;
-	}
-	
-	// Добавить Эпику Подзадачу
-	public void putSubtask(Subtask subtask) {
-		if (subtask != null) {
-			this.subtasks.put(subtask.getId(), subtask);
-			subtask.setEpic(this);
+	// Получить список копий id всех Подзадач
+	public ArrayList<Integer> getAllSubtasksId() {
+		//return this.subtasks;
+		ArrayList<Integer> result = new ArrayList<Integer>();
+		for (int idSubtask : this.subtasksId) {
+			result.add(idSubtask);
 		}
+		return result;
 	}
 	
-	// Удалить у Эпика Подзадачу
+	// Добавить Эпику id Подзадачи
+	public void putSubtask(int idSubtask) {
+		this.subtasksId.add(idSubtask);
+	}
+	
+	// Удалить у Эпика id Подзадачи
 	public void delSubtask(int id) {
-		this.subtasks.remove(id);
+		this.subtasksId.remove(id);
 	}
 	
-	// Удалить все Подзадачи у Эпика
-	public void delAllSubtask() {
-		this.subtasks.clear();
+	// Удалить у Эпика все id Подзадач
+	public void delAllSubtasksId() {
+		this.subtasksId.clear();
 	}
 	
 	// Получить строковое представление
@@ -96,16 +115,14 @@ public class Epic extends Task {
 		
 		String result = super.toString() + ",subtasks=[";
 		
-		boolean isFirst = true;
-		for (Map.Entry<Integer, Subtask> entry : subtasks.entrySet()) {
+		
+		for (int i = 0; i < this.subtasksId.size(); i++) {
 			// Всегда кроме первой этэрации вначале добавить запятую
-			if (isFirst) {
-				isFirst = false;
-			} else {
+			if (i > 0) {
 				result = result + ",";
 			}
 			
-			Integer subtaskId = (Integer) entry.getValue().getId();
+			Integer subtaskId = this.subtasksId.get(i);
 			result = result + "subtask.id=" + subtaskId.toString();
 		}
 		

@@ -4,7 +4,8 @@ import enumerations.*;
 
 public class Subtask extends Task {
 	// Для каждой подзадачи известно, в рамках какого эпика она выполняется.
-	private Epic epic;
+	//private Epic epic;
+	private int epicId;
 	
 	public Subtask(int id) {
 		super(id);
@@ -16,28 +17,26 @@ public class Subtask extends Task {
 		super.typeTask = TypeTask.SUBTASK;
 	}
 	
+	// Конструктор копирования
 	public Subtask(Subtask subtask) {
 		super(subtask);
 		super.typeTask = TypeTask.SUBTASK;
 	}
 	
 	// Получить Эпик Подзадачи
-	public Epic getEpic() {
-		return this.epic;
+	public int getEpicId() {
+		//return this.epic;
+		return this.epicId;
 	}
 	
 	// Назначить Подзадаче Эпик
-	public void setEpic(Epic epic) {
-		this.epic = epic;
+	public void setEpic(int epic) {
+		this.epicId = epic;
 	}
 	
 	// Получить строковое представление
 	@Override
 	public String toString() {
-		if (this.epic != null) {
-			Integer epicId = (Integer) this.epic.getId();
-			return super.toString() + ",epic.id=" + epicId.toString();
-		}
-		return super.toString() + ",epic.id=null";
+		return super.toString() + ",epic.id=" + this.getEpicId();
 	}
 }

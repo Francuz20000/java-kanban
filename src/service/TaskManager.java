@@ -5,6 +5,7 @@ import model.Epic;
 import model.Subtask;
 import model.Task;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,19 +28,61 @@ public class TaskManager {
 		return ++this.counter;
 	}
 	
-	// Получить список всех Задач
-	public HashMap<Integer, Task> getListAllTasks() {
-		return this.tasks;
+	// Получить список копий всех Задач
+	public HashMap<Integer, Task> getCopyAllTasks() {
+		// Подготовить пустой список копию
+		HashMap<Integer, Task> result = new HashMap<>();
+		
+		// Пройти по списку Задач и скопировать каждую в возвращаемый список
+		for (Map.Entry<Integer, Task> entry : this.tasks.entrySet()) {
+			// Создать копию Задачи
+			Task task = new Task(entry.getValue());
+			
+			// Получить id Задачи
+			int taskId = entry.getKey();
+			
+			// Добавить id и копию Задачи в список-копию
+			result.put(taskId, task);
+		}
+		return result;
 	}
 	
-	// Получить список всех Эпиков
-	public HashMap<Integer, Epic> getListAllEpics() {
-		return this.epics;
+	// Получить список копий всех Эпиков
+	public HashMap<Integer, Epic> getCopyAllEpics() {
+		// Подготовить пустой список копию
+		HashMap<Integer, Epic> result = new HashMap<>();
+		
+		// Пройти по списку Эпиков и скопировать каждую в возвращаемый список
+		for (Map.Entry<Integer, Epic> entry : this.epics.entrySet()) {
+			// Создать копию Эпика
+			Epic epic = new Epic(entry.getValue());
+			
+			// Получить id Эпика
+			int epicId = entry.getKey();
+			
+			// Добавить id и копию Эпик в список-копию
+			result.put(epicId, epic);
+		}
+		return result;
 	}
 	
-	// Получить список всех Подзадач
-	public HashMap<Integer, Subtask> getListAllSubtasks() {
-		return this.subtasks;
+	// Получить список копий всех Подзадач
+	public HashMap<Integer, Subtask> getCopyAllSubtasks() {
+		// Подготовить пустой список копию
+		HashMap<Integer, Subtask> result = new HashMap<>();
+		
+		// Пройти по списку Подзадач и скопировать каждую в возвращаемый список
+		for (Map.Entry<Integer, Subtask> entry : this.subtasks.entrySet()) {
+			// Создать копию Подзадачи
+			Subtask subtask = new Subtask(entry.getValue());
+			
+			// Получить id Подзадачи
+			int subtaskId = entry.getKey();
+			
+			// Добавить id и копию Подзадачи в список-копию
+			result.put(subtaskId, subtask);
+		}
+		return result;
 	}
 	
 	// Удалить все Задачи
@@ -51,25 +94,25 @@ public class TaskManager {
 	public void delAllEpics() {
 		// Удалить все Подзадачи у Эпиков
 		for (Map.Entry<Integer, Epic> entry : this.epics.entrySet()) {
-			this.delAllSubtasks(entry.getValue());
+			this.delAllSubtasksId(entry.getValue());
 		}
 		
 		// Удалить все Эпики
 		this.epics.clear();
 	}
 	
-	// Удалить все Подзадачи
-	public void delAllSubtasks(Epic epic) {
-		// Получить список Подзадач Эпика
-		HashMap<Integer, Subtask> subtasksToDel = epic.getAllSubtasks();
+	// Удалить все Подзадачи Эпика
+	public void delAllSubtasksId(Epic epic) {
+		// Получить список всех Подзадач
+		ArrayList<Integer> SubtasksId = epic.getAllSubtasksId();
 		
 		// Удалить Подзадачи из общего списка
-		for(Integer id : subtasksToDel.keySet()) {
-			this.subtasks.remove(id);
+		for (int i = 0, c = SubtasksId.size(); i < c; i++) {
+			this.subtasks.remove(SubtasksId.get(i));
 		}
 		
-		// Удалить все Подзадачи
-		epic.delAllSubtask();
+		// Удалить у Эпика все id Подзадач
+		epic.delAllSubtasksId();
 	}
 	
 	// Получить Задачу по id
@@ -85,21 +128,6 @@ public class TaskManager {
 	// Получить Подзадачу по id
 	public Subtask getSubtaskById(int id) {
 		return this.subtasks.get(id);
-	}
-	
-	// Получить все Задачи
-	public HashMap<Integer, Task> getAllTasks() {
-		return this.tasks;
-	}
-	
-	// Получить все Эпики
-	public HashMap<Integer, Epic> getAllEpics() {
-		return this.epics;
-	}
-	
-	// Получить все Подзадачи
-	public HashMap<Integer, Subtask> getAllSubtasks() {
-		return this.subtasks;
 	}
 	
 	// Добавить Задачу
@@ -122,20 +150,32 @@ public class TaskManager {
 		this.epics.put(epic.getId(), epic);
 		
 		// Получить все подзадачи Эпика
-		HashMap<Integer, Subtask> subtasks = epic.getAllSubtasks();
+		HashMap<Integer, Subtask> subtasks = epic.getCopyAllSubtasks();
 		
 		// Добавить все подзадачи Эпика в общий список
 		this.subtasks.putAll(subtasks);
 	}
 	
 	// Создать Подзадачу
-	public void put(Subtask subtask) {
+	public void put(int epicId, Subtask subtask) {
 		// Если объект пустой или неверного типа
 		if (subtask == null) return;
 		if (subtask.getTypeTask() != TypeTask.SUBTASK) return;
 		
-		// Добавить Подзадачу в список
-		this.subtasks.put(subtask.getId(), subtask);
+		// Если такой Эпик в списке существует
+		if (this.epics.containsKey(epicId)) {
+			// Получить из списка Эпик
+			Epic epic = this.epics.get(epicId);
+			
+			// Добавить в Подзадачу id Эпика
+			subtask.setEpic(epic.getId());
+			
+			// Добавить в Эпик id Подзадачи
+			epic.putSubtask(subtask.getId());
+			
+			// Добавить Подзадачу в список
+			this.subtasks.put(subtask.getId(), subtask);
+		}
 	}
 	
 	// Обновить Задачу
@@ -163,14 +203,13 @@ public class TaskManager {
 		// Получить Эпик из общего списка по id
 		Epic epic = this.epics.get(id);
 		
-		// Получить все подзадачи Эпика
-		HashMap<Integer, Subtask> subtasks = epic.getAllSubtasks();
-		
-		// Удалить у Эпика все Подзадачи
-		this.delAllSubtasks(epic);
-		
-		// Удалить Эпик
-		this.epics.remove(id);
+		if (epic != null) {
+			// Удалить из списка все Подзадачи Эпика
+			delAllSubtasksId(epic);
+			
+			// Удалить Эпик
+			this.epics.remove(id);
+		}
 	}
 	
 	// Удалить Подзадачу по id
@@ -178,8 +217,11 @@ public class TaskManager {
 		// Получить Подзадачу по id
 		Subtask subtask = this.subtasks.get(id);
 		
-		// Из Подзадачи получить Эпик
-		Epic epic = subtask.getEpic();
+		// Из Подзадачи получить id Эпика
+		int idEpic = subtask.getEpicId();
+		
+		// Из списка получить Эпик по id
+		Epic epic = this.epics.get(idEpic);
 		
 		// Из Эпика удалить Подзадачу
 		epic.delSubtask(id);
@@ -198,5 +240,12 @@ public class TaskManager {
 		Epic epic = this.epics.get(idEpic);
 		if (epic != null) return epic.getAllSubtasks();
 		return null;
+	}
+	
+	private void addSubtaskToEpic(int epicId, Subtask subtask) {
+		if (this.epics.containsKey(epicId)) {
+			Epic epic = this.epics.get(epicId);
+			epic.putSubtask(subtask.getId());
+		}
 	}
 }

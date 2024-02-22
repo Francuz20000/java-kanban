@@ -26,6 +26,7 @@ public class Task {
         this.status = status;
     }
     
+    // Конструктор копирования
     public Task(Task task) {
         this.typeTask = TypeTask.TASK;
         this.id = task.id;
