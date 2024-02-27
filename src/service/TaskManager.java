@@ -140,7 +140,7 @@ public class TaskManager {
 		this.tasks.put(task.getId(), task);
 	}
 	
-	// Создать Эпик
+	// Добавить Эпик
 	public void put(Epic epic) {
 		// Если объект пустой или неверного типа
 		if (epic == null) return;
@@ -148,12 +148,6 @@ public class TaskManager {
 		
 		// Добавить Эпик в список
 		this.epics.put(epic.getId(), epic);
-		
-		// Получить все подзадачи Эпика
-		HashMap<Integer, Subtask> subtasks = epic.getCopyAllSubtasks();
-		
-		// Добавить все подзадачи Эпика в общий список
-		this.subtasks.putAll(subtasks);
 	}
 	
 	// Создать Подзадачу
@@ -231,15 +225,62 @@ public class TaskManager {
 	}
 	
 	// Получить список всех Подзадач определённого Эпика
-	public HashMap<Integer, Subtask> getAllSubtasksByEpic(Epic epic) {
-		return epic.getAllSubtasks();
+	public ArrayList<Subtask> getAllSubtasksByEpic(Epic epic) {
+		ArrayList<Subtask> result = new ArrayList<>();
+		if (epic != null) {
+			ArrayList<Integer> subtasksId = epic.getAllSubtasksId();
+			for (Map.Entry<Integer, Subtask> entry : this.subtasks.entrySet()) {
+				
+				Subtask subtask = new Subtask(entry.getValue());
+				result.add(subtask);
+			}
+		}
+		return result;
 	}
 	
 	// Получить списка всех Подзадач определённого Эпика по id
-	public HashMap<Integer, Subtask> getAllSubtasksByEpic(int idEpic) {
+	public ArrayList<Subtask> getAllSubtasksByEpic(int idEpic) {
+		ArrayList<Subtask> result = new ArrayList<>();
 		Epic epic = this.epics.get(idEpic);
-		if (epic != null) return epic.getAllSubtasks();
-		return null;
+		if (epic != null) {
+			ArrayList<Integer> subtasksId = epic.getAllSubtasksId();
+			for (int i = 0, c = subtasksId.size(); i < c; i++) {
+				Integer subtaskId = subtasksId.get(i);
+				Subtask subtask = new Subtask(this.subtasks.get(subtaskId));
+				result.add(subtask);
+			}
+		}
+		return result;
+	}
+	
+	public HashMap<Integer, Epic> getAllEpics() {
+		HashMap<Integer, Epic> result = new HashMap<>();
+		for (Map.Entry<Integer, Epic> entry : this.epics.entrySet()) {
+			Epic epic = new Epic(entry.getValue());
+			result.put(entry.getKey(), epic);
+		}
+		
+		return result;
+	}
+	
+	public HashMap<Integer, Task> getAllTasks() {
+		HashMap<Integer, Task> result = new HashMap<>();
+		for (Map.Entry<Integer, Task> entry : this.tasks.entrySet()) {
+			Task task = new Task(entry.getValue());
+			result.put(entry.getKey(), task);
+		}
+		
+		return result;
+	}
+	
+	public HashMap<Integer, Subtask> getAllSubtasks() {
+		HashMap<Integer, Subtask> result = new HashMap<>();
+		for (Map.Entry<Integer, Subtask> entry : this.subtasks.entrySet()) {
+			Subtask subtask = new Subtask(entry.getValue());
+			result.put(entry.getKey(), subtask);
+		}
+		
+		return result;
 	}
 	
 	private void addSubtaskToEpic(int epicId, Subtask subtask) {

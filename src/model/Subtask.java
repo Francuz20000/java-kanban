@@ -21,6 +21,7 @@ public class Subtask extends Task {
 	public Subtask(Subtask subtask) {
 		super(subtask);
 		super.typeTask = TypeTask.SUBTASK;
+		this.epicId = subtask.getEpicId();
 	}
 	
 	// Получить Эпик Подзадачи
@@ -37,6 +38,6 @@ public class Subtask extends Task {
 	// Получить строковое представление
 	@Override
 	public String toString() {
-		return super.toString() + ",epic.id=" + this.getEpicId();
+		return super.toString() + ",epic.id=" + this.epicId;
 	}
 }

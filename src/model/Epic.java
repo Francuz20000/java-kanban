@@ -43,6 +43,7 @@ public class Epic extends Task {
 	}
 	
 	/*----------- Перенести в TaskManager */
+	/*
 	// Расчитать текущий статус
 	public Status getStatus() {
 		// Если Подзадач нету то Эпик всегда NEW
@@ -86,8 +87,9 @@ public class Epic extends Task {
 	public ArrayList<Integer> getAllSubtasksId() {
 		//return this.subtasks;
 		ArrayList<Integer> result = new ArrayList<Integer>();
-		for (int idSubtask : this.subtasksId) {
-			result.add(idSubtask);
+		
+		for (int i = 0, c = this.subtasksId.size(); i < c; i++) {
+			result.add(this.subtasksId.get(i));
 		}
 		return result;
 	}
