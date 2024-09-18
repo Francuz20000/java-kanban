@@ -8,6 +8,7 @@ import model.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 public class TaskManager {
 	private int counter = 0; // Для генерации идентификаторов можно использовать числовое поле-счётчик
@@ -27,7 +28,7 @@ public class TaskManager {
 	public int getCounter() {
 		return ++this.counter;
 	}
-	
+	/*
 	// Получить список копий всех Задач
 	public HashMap<Integer, Task> getCopyAllTasks() {
 		// Подготовить пустой список копию
@@ -46,7 +47,26 @@ public class TaskManager {
 		}
 		return result;
 	}
-	
+*/
+	// Получить список всех Задач
+	public List<Task> getCopyAllTasks() {
+		// Подготовить пустой список копию
+		List<Task> result = new ArrayList<>();
+
+		// Пройти по списку Задач и скопировать каждую в возвращаемый список
+		for (Map.Entry<Integer, Task> entry : this.tasks.entrySet()) {
+			// Создать копию Задачи
+			Task task = new Task(entry.getValue());
+
+			// Получить id Задачи
+			//int taskId = entry.getKey();
+
+			// Добавить id и копию Задачи в список-копию
+			result.add(task);
+		}
+		return result;
+	}
+
 	// Получить список копий всех Эпиков
 	public HashMap<Integer, Epic> getCopyAllEpics() {
 		// Подготовить пустой список копию
@@ -225,10 +245,10 @@ public class TaskManager {
 	}
 	
 	// Получить список всех Подзадач определённого Эпика
-	public ArrayList<Subtask> getAllSubtasksByEpic(Epic epic) {
-		ArrayList<Subtask> result = new ArrayList<>();
+	public List<Subtask> getAllSubtasksByEpic(Epic epic) {
+		List<Subtask> result = new ArrayList<>();
 		if (epic != null) {
-			ArrayList<Integer> subtasksId = epic.getAllSubtasksId();
+			List<Integer> subtasksId = epic.getAllSubtasksId();
 			for (Map.Entry<Integer, Subtask> entry : this.subtasks.entrySet()) {
 				
 				Subtask subtask = new Subtask(entry.getValue());
@@ -239,11 +259,11 @@ public class TaskManager {
 	}
 	
 	// Получить списка всех Подзадач определённого Эпика по id
-	public ArrayList<Subtask> getAllSubtasksByEpic(int idEpic) {
-		ArrayList<Subtask> result = new ArrayList<>();
+	public List<Subtask> getAllSubtasksByEpic(int idEpic) {
+		List<Subtask> result = new ArrayList<>();
 		Epic epic = this.epics.get(idEpic);
 		if (epic != null) {
-			ArrayList<Integer> subtasksId = epic.getAllSubtasksId();
+			List<Integer> subtasksId = epic.getAllSubtasksId();
 			for (int i = 0, c = subtasksId.size(); i < c; i++) {
 				Integer subtaskId = subtasksId.get(i);
 				Subtask subtask = new Subtask(this.subtasks.get(subtaskId));
@@ -252,7 +272,27 @@ public class TaskManager {
 		}
 		return result;
 	}
-	
+
+	// Рассчитать Статус задачи
+	public Status CalculateTaskStatus(Task task) {
+		if (task == null) return null;
+		Status result = null;
+
+		if (task.getTypeTask() == TypeTask.EPIC) {
+			Epic epic = (Epic)task;
+			List<Subtask> list = getAllSubtasksByEpic(epic);
+			for (Subtask subtask : list) {
+				if (subtask.getStatus() == Status.IN_PROGRESS) return Status.IN_PROGRESS;
+				if (result == null) result = subtask.getStatus();
+				if (result != subtask.getStatus()) return Status.IN_PROGRESS;
+			}
+		}
+		else {
+			result = task.getStatus();
+		}
+		return result;
+	}
+
 	public HashMap<Integer, Epic> getAllEpics() {
 		HashMap<Integer, Epic> result = new HashMap<>();
 		for (Map.Entry<Integer, Epic> entry : this.epics.entrySet()) {
