@@ -11,34 +11,43 @@ public class Main {
 
     
     public static void main(String[] args) {
-        System.out.println("Поехали!");
+        System.out.println(" ");
+        System.out.println("---=== Поехали! ===---");
+        System.out.println(" ");
         
         // Создать Объект-менеджер который управляет всеми задачами
-        TaskManager taskManager = new TaskManager();
+        InMemoryTaskManager taskManager = new InMemoryTaskManager();
         
         // Создать Задачи, Эпики и Подзадачи
         createObjects(taskManager);
         
         // Распечатать списки Эпиков, Задач и Подзадач
-        ShowObjects(taskManager);
+        showObjects(taskManager);
         
         // Изменить статусы созданных объектов
         changeObjects(taskManager);
         
         // Распечатать списки Эпиков, Задач и Подзадач
-        ShowObjects(taskManager);
+        showObjects(taskManager);
         
         // Удалить Обекты Задачи и Эпика
         delObjects(taskManager);
         
         // Распечатать списки Эпиков, Задач и Подзадач
-        ShowObjects(taskManager);
+        showObjects(taskManager);
         
-        System.out.println("Приехали!");
+        // Имитировать Историю вызовов
+        taskManager.getTask(2);
+        taskManager.getEpic(6);
+        
+        // Вывести в консоль списки: Задач, Эпиков, Подзадач, Истории
+        printAllTasks(taskManager);
+        
+        System.out.println("---=== Приехали! ===---");
     }
     
     // Создать Задачи, Эпики и Подзадачи
-    public static void createObjects(TaskManager taskManager) {
+    public static void createObjects(InMemoryTaskManager taskManager) {
         // Создать две Задачи
         Task task1 = new Task(taskManager.getCounter(), "Задача 1", "Попытка создать Задача 1", Status.NEW);
         Task task2 = new Task(taskManager.getCounter(), "Задача 2", "Попытка создать Задача 2", Status.NEW);
@@ -71,22 +80,22 @@ public class Main {
     }
     
     // Распечатать списки эпиков, задач и подзадач
-    public static void ShowObjects(TaskManager taskManager) {
+    public static void showObjects(InMemoryTaskManager taskManager) {
         
         // Распечатайте списки эпиков, задач и подзадач через System.out.println(..).
-        HashMap<Integer, Epic> epics = taskManager.getAllEpics();
+        HashMap<Integer, Epic> epics = taskManager.getAllHashMapEpics();
         
         for (Map.Entry<Integer, Epic> entry : epics.entrySet()) {
             System.out.println(entry.getValue().toString());
         }
         
-        HashMap<Integer, Task> tasks = taskManager.getAllTasks();
+        HashMap<Integer, Task> tasks = taskManager.getAllHashMapTasks();
         
         for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
             System.out.println(entry.getValue().toString());
         }
         
-        HashMap<Integer, Subtask> subtasks = taskManager.getAllSubtasks();
+        HashMap<Integer, Subtask> subtasks = taskManager.getAllHashMapSubtasks();
         
         for (Map.Entry<Integer, Subtask> entry : subtasks.entrySet()) {
             System.out.println(entry.getValue().toString());
@@ -96,8 +105,8 @@ public class Main {
     }
     
     // Изменить статусы созданных объектов
-    public static void changeObjects(TaskManager taskManager) {
-        HashMap<Integer, Task> tasks = taskManager.getAllTasks();
+    public static void changeObjects(InMemoryTaskManager taskManager) {
+        HashMap<Integer, Task> tasks = taskManager.getAllHashMapTasks();
         int i = 1;
         for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
             Task task = entry.getValue();
@@ -109,7 +118,7 @@ public class Main {
             i++;
         }
         
-        HashMap<Integer, Subtask> subtasks = taskManager.getAllSubtasks();
+        HashMap<Integer, Subtask> subtasks = taskManager.getAllHashMapSubtasks();
         i = 1;
         for (Map.Entry<Integer, Subtask> entry : subtasks.entrySet()) {
             Subtask subtask = entry.getValue();
@@ -125,9 +134,9 @@ public class Main {
     }
     
     // Удалить Обекты Задачи и Эпика
-    public static void delObjects(TaskManager taskManager) {
+    public static void delObjects(InMemoryTaskManager taskManager) {
         // И, наконец, попробуйте удалить одну из задач и один из эпиков.
-        HashMap<Integer, Task> tasks = taskManager.getAllTasks();
+        HashMap<Integer, Task> tasks = taskManager.getAllHashMapTasks();
         int i = 1;
         int delId = 0;
         for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
@@ -139,7 +148,7 @@ public class Main {
         }
         taskManager.delTask(delId);
         
-        HashMap<Integer, Epic> epics = taskManager.getAllEpics();
+        HashMap<Integer, Epic> epics = taskManager.getAllHashMapEpics();
         i = 1;
         delId = 0;
         for (Map.Entry<Integer, Epic> entry : epics.entrySet()) {
@@ -150,5 +159,30 @@ public class Main {
             i++;
         }
         taskManager.delEpic(delId);
+    }
+    
+    // Вывести в консоль списки: Задач, Эпиков, Подзадач, Истории
+    private static void printAllTasks(InMemoryTaskManager manager) {
+        System.out.println("Задачи:");
+        for (Task task : manager.getAllTasks()) {
+            System.out.println(task);
+        }
+        System.out.println("Эпики:");
+        for (Task epic : manager.getAllEpics()) {
+            System.out.println(epic);
+            
+            for (Task task : manager.getAllSubtasksByEpic(epic.getId())) {
+                System.out.println("--> " + task);
+            }
+        }
+        System.out.println("Подзадачи:");
+        for (Task subtask : manager.getAllSubtasks()) {
+            System.out.println(subtask);
+        }
+        
+        System.out.println("История:");
+        for (Task task : manager.getHistory()) {
+            System.out.println(task);
+        }
     }
 }
