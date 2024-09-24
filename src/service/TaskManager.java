@@ -30,13 +30,13 @@ public interface TaskManager {
 	void delAllSubtasksId(Epic epic);
 	
 	// Получить Задачу по id
-	Task getTaskById(int id);
+	Task getTask(int id);
 	
 	// Получить Эпик по id
-	Epic getEpicById(int id);
+	Epic getEpic(int id);
 	
 	// Получить Подзадачу по id
-	Subtask getSubtaskById(int id);
+	Subtask getSubtask(int id);
 	
 	// Добавить Задачу
 	void put(Task task);
@@ -74,3 +74,4 @@ public interface TaskManager {
 	// Рассчитать Статус задачи
 	Status CalculateTaskStatus(Task task);
 }
+

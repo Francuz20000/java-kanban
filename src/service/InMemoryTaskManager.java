@@ -10,18 +10,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-public class InMemoryTaskManager implements TaskManager {
-	private int counter = 0; // Для генерации идентификаторов можно использовать числовое поле-счётчик
-	
-	// Возможность хранить задачи всех типов. Для этого вам нужно выбрать подходящую коллекцию.
+public class InMemoryTaskManager implements HistoryManager, TaskManager {
+	private int counter = 0;                    // Поле-счётчик для генерации идентификаторов
 	private HashMap<Integer, Task> tasks;       // Список Задач
 	private HashMap<Integer, Epic> epics;       // Список Эпиков
 	private HashMap<Integer, Subtask> subtasks; // Список Подзадач
+	private ArrayList<Task> history;            // Последние просмотренные пользователем задачи
 	
 	public InMemoryTaskManager() {
 		this.tasks = new HashMap<>();
 		this.epics = new HashMap<>();
 		this.subtasks = new HashMap<>();
+		this.history = new ArrayList<>();
 	}
 	
 	// Получить новый уникальный id
@@ -30,7 +30,7 @@ public class InMemoryTaskManager implements TaskManager {
 		return ++this.counter;
 	}
 
-	// Получить список всех Задач
+	// Получить Список всех Задач
 	@Override
 	public List<Task> getAllTasks() {
 		// Подготовить пустой список копию
@@ -47,7 +47,7 @@ public class InMemoryTaskManager implements TaskManager {
 		return result;
 	}
 
-	// Получить список всех Эпиков
+	// Получить Список всех Эпиков
 	@Override
 	public List<Epic> getAllEpics() {
 		// Подготовить пустой список копию
@@ -64,7 +64,7 @@ public class InMemoryTaskManager implements TaskManager {
 		return result;
 	}
 	
-	// Получить список всех Подзадач
+	// Получить Список всех Подзадач
 	@Override
 	public List<Subtask> getAllSubtasks() {
 		// Подготовить пустой список копию
@@ -116,20 +116,27 @@ public class InMemoryTaskManager implements TaskManager {
 	
 	// Получить Задачу по id
 	@Override
-	public Task getTaskById(int id) {
-		return this.tasks.get(id);
+	public Task getTask(int id) {
+		Task task = this.tasks.get(id);
+		this.setHistory(task);
+		return task;
 	}
 	
 	// Получить Эпик по id
 	@Override
-	public Epic getEpicById(int id) {
-		return this.epics.get(id);
+	public Epic getEpic(int id)
+	{
+		Epic epic = this.epics.get(id);
+		this.setHistory(epic);
+		return epic;
 	}
 	
 	// Получить Подзадачу по id
 	@Override
-	public Subtask getSubtaskById(int id) {
-		return this.subtasks.get(id);
+	public Subtask getSubtask(int id) {
+		Subtask subtask = this.subtasks.get(id);
+		this.setHistory(subtask);
+		return subtask;
 	}
 	
 	// Добавить Задачу
@@ -235,7 +242,7 @@ public class InMemoryTaskManager implements TaskManager {
 		this.subtasks.remove(id);
 	}
 	
-	// Получить список всех Подзадач определённого Эпика
+	// Получить Список всех Подзадач определённого Эпика
 	@Override
 	public List<Subtask> getAllSubtasksByEpic(Epic epic) {
 		List<Subtask> result = new ArrayList<>();
@@ -250,7 +257,7 @@ public class InMemoryTaskManager implements TaskManager {
 		return result;
 	}
 	
-	// Получить списка всех Подзадач определённого Эпика по id
+	// Получить Список всех Подзадач определённого Эпика по id
 	@Override
 	public List<Subtask> getAllSubtasksByEpic(int idEpic) {
 		List<Subtask> result = new ArrayList<>();
@@ -266,7 +273,7 @@ public class InMemoryTaskManager implements TaskManager {
 		return result;
 	}
 
-	// Рассчитать Статус задачи
+	// Рассчитать Статус Задачи
 	@Override
 	public Status CalculateTaskStatus(Task task) {
 		if (task == null) return null;
@@ -287,7 +294,30 @@ public class InMemoryTaskManager implements TaskManager {
 		return result;
 	}
 	
-	// Получить список всех Эпиков
+	// Получить Список последних 10 просмотренных Задач
+	@Override
+	public List<Task> getHistory() {
+		List<Task> result = new ArrayList<>();
+		//int taskCount = 0;
+		for(Task task : history) {
+			result.add(task);
+			//taskCount++;
+			//if(taskCount > 10) break;
+		}
+		return result;
+	}
+	
+	// Добавить Задачу в Историю
+	@Override
+	public void setHistory(Task task) {
+		int historySize = 10;
+		this.history.add(task);
+		while(this.history.size() > historySize) {
+			this.history.remove(1);
+		}
+	}
+	
+	// Получить Список всех Эпиков
 	public HashMap<Integer, Epic> getAllHashMapEpics() {
 		HashMap<Integer, Epic> result = new HashMap<>();
 		for (Map.Entry<Integer, Epic> entry : this.epics.entrySet()) {
@@ -298,7 +328,7 @@ public class InMemoryTaskManager implements TaskManager {
 		return result;
 	}
 	
-	// Получить список всех Задач
+	// Получить Список всех Задач
 	public HashMap<Integer, Task> getAllHashMapTasks() {
 		HashMap<Integer, Task> result = new HashMap<>();
 		for (Map.Entry<Integer, Task> entry : this.tasks.entrySet()) {
@@ -309,7 +339,7 @@ public class InMemoryTaskManager implements TaskManager {
 		return result;
 	}
 	
-	// Получить список всех Подзадач
+	// Получить Список всех Подзадач
 	public HashMap<Integer, Subtask> getAllHashMapSubtasks() {
 		HashMap<Integer, Subtask> result = new HashMap<>();
 		for (Map.Entry<Integer, Subtask> entry : this.subtasks.entrySet()) {
