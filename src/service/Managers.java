@@ -4,20 +4,12 @@ import model.Task;
 
 // Утилитарный класс для создания Менеджера
 public class Managers {
-	TaskManager taskManager;
-	InMemoryHistoryManager historyManager;
-	
-	Managers() {
-		this.taskManager = new InMemoryTaskManager();
-		this.historyManager = new InMemoryHistoryManager();
-	}
-	
 	// Получить Менеджер Задач
-	public TaskManager getDefault() {
-		return this.taskManager;
+	public static TaskManager getDefault() {
+		return new InMemoryTaskManager(new InMemoryHistoryManager());
 	}
 	
-	public InMemoryHistoryManager getDefaultHistory() {
-		return this.historyManager;
+	public static InMemoryHistoryManager getDefaultHistory() {
+		return new InMemoryHistoryManager();
 	}
 }
