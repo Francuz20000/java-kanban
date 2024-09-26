@@ -103,7 +103,7 @@ public class InMemoryTaskManager implements HistoryManager, TaskManager {
 	@Override
 	public void delAllSubtasksId(Epic epic) {
 		// Получить список всех Подзадач
-		ArrayList<Integer> SubtasksId = epic.getAllSubtasksId();
+		List<Integer> SubtasksId = epic.getAllSubtasksId();
 		
 		// Удалить Подзадачи из общего списка
 		for (int i = 0, c = SubtasksId.size(); i < c; i++) {

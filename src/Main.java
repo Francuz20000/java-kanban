@@ -16,10 +16,8 @@ public class Main {
         System.out.println("---=== Поехали! ===---");
         System.out.println(" ");
         
-        Managers managers = new Managers();
-        
         // Создать Объект-менеджер который управляет всеми задачами
-        TaskManager taskManager = managers.getDefault();
+        TaskManager taskManager = Managers.getDefault();
         
         // Создать Задачи, Эпики и Подзадачи
         createObjects(taskManager);

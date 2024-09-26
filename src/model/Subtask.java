@@ -3,8 +3,7 @@ package model;
 import enumerations.*;
 
 public class Subtask extends Task {
-	// Для каждой подзадачи известно, в рамках какого эпика она выполняется.
-	//private Epic epic;
+	// Для каждой Подзадачи известно, в рамках какого Эпика она выполняется.
 	private int epicId;
 	
 	public Subtask(int id) {
@@ -26,12 +25,12 @@ public class Subtask extends Task {
 	
 	// Получить Эпик Подзадачи
 	public int getEpicId() {
-		//return this.epic;
 		return this.epicId;
 	}
 	
 	// Назначить Подзадаче Эпик
 	public void setEpic(int epic) {
+		if(epic == this.getId()) return;
 		this.epicId = epic;
 	}
 	
