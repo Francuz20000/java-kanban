@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Epic extends Task {
 	// Каждый эпик знает, id каких подзадач в него входят
-	private final ArrayList<Integer> subtasksId;
+	private final List<Integer> subtasksId;
 	
 	public Epic(int id) {
 		super(id);

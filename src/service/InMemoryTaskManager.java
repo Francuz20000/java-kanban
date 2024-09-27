@@ -11,11 +11,11 @@ import java.util.Map;
 import java.util.List;
 
 public class InMemoryTaskManager implements HistoryManager, TaskManager {
-	private int counter = 0;                    // Поле-счётчик для генерации идентификаторов
-	private final HashMap<Integer, Task> tasks;       // Список Задач
-	private final HashMap<Integer, Epic> epics;       // Список Эпиков
-	private final HashMap<Integer, Subtask> subtasks; // Список Подзадач
-	private final InMemoryHistoryManager history;            // Последние просмотренные пользователем задачи
+	private int counter = 0;                            // Поле-счётчик для генерации идентификаторов
+	private final HashMap<Integer, Task> tasks;         // Список Задач
+	private final HashMap<Integer, Epic> epics;         // Список Эпиков
+	private final HashMap<Integer, Subtask> subtasks;   // Список Подзадач
+	private InMemoryHistoryManager history;       // Последние просмотренные пользователем задачи
 	
 	public InMemoryTaskManager(InMemoryHistoryManager history) {
 		this.tasks = new HashMap<>();
