@@ -86,12 +86,19 @@ public class Task {
         if (obj == null) return false;
         if (this.getClass() != obj.getClass()) return false;
         Task task = (Task)obj;
-        return Objects.equals(this.typeTask, task.typeTask) &&
-               Objects.equals(this.name, task.name) &&
-               Objects.equals(this.description, task.description) &&
-               this.id == task.id &&
-               Objects.equals(this.status, task.status);
+        return this.id == task.id;
     }
+/*    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null) return false;
+        if (this.getClass() != obj.getClass()) return false;
+        Task task = (Task)obj;
+        return Objects.equals(this.typeTask, task.typeTask) &&
+                Objects.equals(this.name, task.name) &&
+                Objects.equals(this.description, task.description) &&
+                this.id == task.id &&
+                Objects.equals(this.status, task.status);
+    }*/
     
     // Получить значение хэш-кода для объекта
     @Override

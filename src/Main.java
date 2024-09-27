@@ -6,6 +6,7 @@ import service.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 public class Main {
 
@@ -16,7 +17,7 @@ public class Main {
         System.out.println(" ");
         
         // Создать Объект-менеджер который управляет всеми задачами
-        InMemoryTaskManager taskManager = new InMemoryTaskManager();
+        TaskManager taskManager = Managers.getDefault();
         
         // Создать Задачи, Эпики и Подзадачи
         createObjects(taskManager);
@@ -47,7 +48,7 @@ public class Main {
     }
     
     // Создать Задачи, Эпики и Подзадачи
-    public static void createObjects(InMemoryTaskManager taskManager) {
+    public static void createObjects(TaskManager taskManager) {
         // Создать две Задачи
         Task task1 = new Task(taskManager.getCounter(), "Задача 1", "Попытка создать Задача 1", Status.NEW);
         Task task2 = new Task(taskManager.getCounter(), "Задача 2", "Попытка создать Задача 2", Status.NEW);
@@ -80,36 +81,35 @@ public class Main {
     }
     
     // Распечатать списки эпиков, задач и подзадач
-    public static void showObjects(InMemoryTaskManager taskManager) {
+    public static void showObjects(TaskManager taskManager) {
         
         // Распечатайте списки эпиков, задач и подзадач через System.out.println(..).
-        HashMap<Integer, Epic> epics = taskManager.getAllHashMapEpics();
+        List<Epic> epics = taskManager.getAllEpics();
         
-        for (Map.Entry<Integer, Epic> entry : epics.entrySet()) {
-            System.out.println(entry.getValue().toString());
+        for (Epic epic : epics) {
+            System.out.println(epic.toString());
         }
         
-        HashMap<Integer, Task> tasks = taskManager.getAllHashMapTasks();
+        List<Task> tasks = taskManager.getAllTasks();
         
-        for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
-            System.out.println(entry.getValue().toString());
+        for (Task task : tasks) {
+            System.out.println(task.toString());
         }
         
-        HashMap<Integer, Subtask> subtasks = taskManager.getAllHashMapSubtasks();
+        List<Subtask> subtasks = taskManager.getAllSubtasks();
         
-        for (Map.Entry<Integer, Subtask> entry : subtasks.entrySet()) {
-            System.out.println(entry.getValue().toString());
+        for (Subtask subtask : subtasks) {
+            System.out.println(subtask.toString());
         }
         
         System.out.println(" ");
     }
     
     // Изменить статусы созданных объектов
-    public static void changeObjects(InMemoryTaskManager taskManager) {
-        HashMap<Integer, Task> tasks = taskManager.getAllHashMapTasks();
+    public static void changeObjects(TaskManager taskManager) {
+        List<Task> tasks = taskManager.getAllTasks();
         int i = 1;
-        for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
-            Task task = entry.getValue();
+        for (Task task : tasks) {
             if (i == 1) {
                 task.setStatus(Status.IN_PROGRESS);
             } else if (i == 2) {
@@ -118,10 +118,9 @@ public class Main {
             i++;
         }
         
-        HashMap<Integer, Subtask> subtasks = taskManager.getAllHashMapSubtasks();
+        List<Subtask> subtasks = taskManager.getAllSubtasks();
         i = 1;
-        for (Map.Entry<Integer, Subtask> entry : subtasks.entrySet()) {
-            Subtask subtask = entry.getValue();
+        for (Subtask subtask : subtasks) {
             if (i == 1) {
                 subtask.setStatus(Status.IN_PROGRESS);
             } else if (i == 2) {
@@ -134,13 +133,12 @@ public class Main {
     }
     
     // Удалить Обекты Задачи и Эпика
-    public static void delObjects(InMemoryTaskManager taskManager) {
+    public static void delObjects(TaskManager taskManager) {
         // И, наконец, попробуйте удалить одну из задач и один из эпиков.
-        HashMap<Integer, Task> tasks = taskManager.getAllHashMapTasks();
+        List<Task> tasks = taskManager.getAllTasks();
         int i = 1;
         int delId = 0;
-        for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
-            Task task = entry.getValue();
+        for (Task task : tasks) {
             if (i == 1) {
                 delId = task.getId();
             }
@@ -148,11 +146,10 @@ public class Main {
         }
         taskManager.delTask(delId);
         
-        HashMap<Integer, Epic> epics = taskManager.getAllHashMapEpics();
+        List<Epic> epics = taskManager.getAllEpics();
         i = 1;
         delId = 0;
-        for (Map.Entry<Integer, Epic> entry : epics.entrySet()) {
-            Epic epic = entry.getValue();
+        for (Epic epic : epics) {
             if (i == 1) {
                 delId = epic.getId();
             }
@@ -162,27 +159,28 @@ public class Main {
     }
     
     // Вывести в консоль списки: Задач, Эпиков, Подзадач, Истории
-    private static void printAllTasks(InMemoryTaskManager manager) {
+    private static void printAllTasks(TaskManager taskManager) {
         System.out.println("Задачи:");
-        for (Task task : manager.getAllTasks()) {
+        for (Task task : taskManager.getAllTasks()) {
             System.out.println(task);
         }
         System.out.println("Эпики:");
-        for (Task epic : manager.getAllEpics()) {
+        for (Task epic : taskManager.getAllEpics()) {
             System.out.println(epic);
             
-            for (Task task : manager.getAllSubtasksByEpic(epic.getId())) {
+            for (Task task : taskManager.getAllSubtasksByEpic(epic.getId())) {
                 System.out.println("--> " + task);
             }
         }
         System.out.println("Подзадачи:");
-        for (Task subtask : manager.getAllSubtasks()) {
+        for (Task subtask : taskManager.getAllSubtasks()) {
             System.out.println(subtask);
         }
         
         System.out.println("История:");
-        for (Task task : manager.getHistory()) {
+        for (Task task : taskManager.getHistory()) {
             System.out.println(task);
         }
+        System.out.println(" ");
     }
 }

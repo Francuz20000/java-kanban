@@ -5,7 +5,7 @@ import model.Task;
 import java.util.List;
 
 public interface HistoryManager {
-	// Получить Список последних 10 просмотренных Задач
+	// Получить Список последних просмотренных Задач
 	List<Task> getHistory();
 	
 	// Добавить Задачу в Историю

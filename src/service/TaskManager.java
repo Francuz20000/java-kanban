@@ -73,5 +73,11 @@ public interface TaskManager {
 	
 	// Рассчитать Статус задачи
 	Status CalculateTaskStatus(Task task);
+	
+	// Получить Список последних просмотренных Задач
+	List<Task> getHistory();
+	
+	// Добавить Задачу в Историю
+	void setHistory(Task task);
 }
 

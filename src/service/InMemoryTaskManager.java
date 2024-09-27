@@ -12,16 +12,16 @@ import java.util.List;
 
 public class InMemoryTaskManager implements HistoryManager, TaskManager {
 	private int counter = 0;                    // Поле-счётчик для генерации идентификаторов
-	private HashMap<Integer, Task> tasks;       // Список Задач
-	private HashMap<Integer, Epic> epics;       // Список Эпиков
-	private HashMap<Integer, Subtask> subtasks; // Список Подзадач
-	private ArrayList<Task> history;            // Последние просмотренные пользователем задачи
+	private final HashMap<Integer, Task> tasks;       // Список Задач
+	private final HashMap<Integer, Epic> epics;       // Список Эпиков
+	private final HashMap<Integer, Subtask> subtasks; // Список Подзадач
+	private final InMemoryHistoryManager history;            // Последние просмотренные пользователем задачи
 	
-	public InMemoryTaskManager() {
+	public InMemoryTaskManager(InMemoryHistoryManager history) {
 		this.tasks = new HashMap<>();
 		this.epics = new HashMap<>();
 		this.subtasks = new HashMap<>();
-		this.history = new ArrayList<>();
+		this.history = history;
 	}
 	
 	// Получить новый уникальный id
@@ -103,7 +103,7 @@ public class InMemoryTaskManager implements HistoryManager, TaskManager {
 	@Override
 	public void delAllSubtasksId(Epic epic) {
 		// Получить список всех Подзадач
-		ArrayList<Integer> SubtasksId = epic.getAllSubtasksId();
+		List<Integer> SubtasksId = epic.getAllSubtasksId();
 		
 		// Удалить Подзадачи из общего списка
 		for (int i = 0, c = SubtasksId.size(); i < c; i++) {
@@ -297,24 +297,13 @@ public class InMemoryTaskManager implements HistoryManager, TaskManager {
 	// Получить Список последних 10 просмотренных Задач
 	@Override
 	public List<Task> getHistory() {
-		List<Task> result = new ArrayList<>();
-		//int taskCount = 0;
-		for(Task task : history) {
-			result.add(task);
-			//taskCount++;
-			//if(taskCount > 10) break;
-		}
-		return result;
+		return this.history.getHistory();
 	}
 	
 	// Добавить Задачу в Историю
 	@Override
 	public void setHistory(Task task) {
-		int historySize = 10;
-		this.history.add(task);
-		while(this.history.size() > historySize) {
-			this.history.remove(1);
-		}
+		this.history.setHistory(task);
 	}
 	
 	// Получить Список всех Эпиков
