@@ -15,7 +15,7 @@ public class InMemoryTaskManager implements HistoryManager, TaskManager {
 	private final HashMap<Integer, Task> tasks;         // Список Задач
 	private final HashMap<Integer, Epic> epics;         // Список Эпиков
 	private final HashMap<Integer, Subtask> subtasks;   // Список Подзадач
-	private InMemoryHistoryManager history;       // Последние просмотренные пользователем задачи
+	private final InMemoryHistoryManager history;       // Последние просмотренные пользователем задачи
 	
 	public InMemoryTaskManager(InMemoryHistoryManager history) {
 		this.tasks = new HashMap<>();
