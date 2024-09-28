@@ -16,11 +16,8 @@ public class InMemoryHistoryManager implements HistoryManager {
 	@Override
 	public List<Task> getHistory() {
 		List<Task> result = new ArrayList<>();
-		//int taskCount = 0;
-		for(Task task : history) {
+		for(Task task : this.history) {
 			result.add(task);
-			//taskCount++;
-			//if(taskCount > 10) break;
 		}
 		return result;
 	}
@@ -29,9 +26,11 @@ public class InMemoryHistoryManager implements HistoryManager {
 	@Override
 	public void setHistory(Task task) {
 		int historySize = 10;
-		this.history.add(task);
+		Task historyTask = new Task(task);
+		this.history.add(historyTask);
 		while(this.history.size() > historySize) {
 			this.history.remove(1);
+			System.out.println("----------");
 		}
 	}
 }
