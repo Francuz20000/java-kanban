@@ -55,7 +55,8 @@ public class Epic extends Task {
 	
 	// Добавить Эпику id Подзадачи
 	public void putSubtask(int idSubtask) {
-		if(idSubtask == this.getId()) return;
+		if(idSubtask == this.getId()) return;// У Подзадачи такой же id как у этого Эпика
+		if(this.subtasksId.contains(idSubtask)) return;// Id такой Подзадачи уже у этого Эпика есть
 		this.subtasksId.add(idSubtask);
 	}
 	
