@@ -10,4 +10,7 @@ public interface HistoryManager {
 	
 	// Добавить Задачу в Историю
 	void setHistory(Task task);
+
+	// Удалить Задачу из Истории
+	void remove(int id);
 }

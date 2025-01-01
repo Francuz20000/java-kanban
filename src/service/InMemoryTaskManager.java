@@ -316,7 +316,13 @@ public class InMemoryTaskManager implements HistoryManager, TaskManager {
 		
 		return result;
 	}
-	
+
+	// Удалить Задачу из Истории
+	@Override
+	public void remove(int id) {
+		//TODO
+	}
+
 	// Получить Список всех Задач
 	public HashMap<Integer, Task> getAllHashMapTasks() {
 		HashMap<Integer, Task> result = new HashMap<>();

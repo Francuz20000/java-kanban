@@ -4,8 +4,6 @@ import model.Subtask;
 import model.Task;
 import service.*;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
 
 public class Main {
@@ -31,7 +29,7 @@ public class Main {
         // Распечатать списки Эпиков, Задач и Подзадач
         showObjects(taskManager);
         
-        // Удалить Обекты Задачи и Эпика
+        // Удалить Объекты Задачи и Эпика
         delObjects(taskManager);
         
         // Распечатать списки Эпиков, Задач и Подзадач
@@ -62,7 +60,7 @@ public class Main {
         Subtask subtask1 = new Subtask(taskManager.getCounter(), "Подзадача 1", "Попытка создать Подзадача 1", Status.NEW);
         Subtask subtask2 = new Subtask(taskManager.getCounter(), "Подзадача 2", "Попытка создать Подзадача 2", Status.NEW);
         
-        // Положить Эпик в Менеджер Задач
+        // Положить Эпик в "Менеджер Задач"
         taskManager.put(epic1);
         
         // Добавить Подзадачи в Менеджер Задач
@@ -132,7 +130,7 @@ public class Main {
         }
     }
     
-    // Удалить Обекты Задачи и Эпика
+    // Удалить Объекты Задачи и Эпика
     public static void delObjects(TaskManager taskManager) {
         // И, наконец, попробуйте удалить одну из задач и один из эпиков.
         List<Task> tasks = taskManager.getAllTasks();
